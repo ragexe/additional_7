@@ -17,28 +17,17 @@ module.exports = function solveSudoku(matrix) {
 
     function getCandidates(row, col) {
         let candidates = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-        let areas = {
-            row: [],
-            col: [],
-            block: {
-                row: Math.floor(row / 3) * 3,
-                col: Math.floor(col / 3) * 3,
-                values: []
-            }
+        let result = [];
+        let area = {
+            row: Math.floor(row / 3) * 3,
+            col: Math.floor(col / 3) * 3,
         };
 
         for (let i = 0; i < 9; i++) {
-            if (matrix[row][i] !== 0) areas.row.push(matrix[row][i]);
-            if (matrix[i][col] !== 0) areas.col.push(matrix[i][col]);
-            if (matrix[areas.block.row + i % 3][areas.block.col + Math.floor(i / 3)] !== 0)
-                areas.block.values.push(matrix[areas.block.row + Math.floor(i / 3)][areas.block.col + i % 3])
+            result.push([matrix[row][i], matrix[i][col], matrix[area.row + i % 3][area.col + Math.floor(i / 3)]])
         }
 
-        candidates = candidates
-            .filter((number) => !areas.row.includes(number))
-            .filter((number) => !areas.col.includes(number))
-            .filter((number) => !areas.block.values.includes(number));
-
-        return candidates;
+        candidates.filter((value) => !result.includes(value))
+        return result;
     }
 };
